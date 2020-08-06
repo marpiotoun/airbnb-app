@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { TouchableOpacity, Text, StatusBar, ScrollView } from "react-native";
-import { login } from "../redux/usersSlice";
+import {
+  TouchableOpacity,
+  Text,
+  StatusBar,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { loginRequest } from "../redux/usersSlice";
 import { useDispatch } from "react-redux";
 import styled from "styled-components";
 import { color, buttonCreater } from "../uiToolkit";
@@ -38,10 +45,10 @@ const Button = styled.View`
   align-items: center;
 `;
 
-const SignIn = ({ navigation }) => {
+const SignIn = ({ navigation, route: { params } }) => {
   const [userInput, setUserInput] = useState({
-    username: "",
-    password: "",
+    username: params?.username,
+    password: params?.password,
   });
   const dispatch = useDispatch();
   const handleInput = (type, text) => {
@@ -51,39 +58,44 @@ const SignIn = ({ navigation }) => {
     });
   };
   const handleSubmit = () => {
-    dispatch(login(userInput.username));
+    dispatch(loginRequest(userInput));
   };
 
   return (
-    <ScrollView
-      contentContainerStyle={{
-        width: "100%",
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
     >
-      <Logo source={require("../assets/airbnb_logo.png")} />
+      <ScrollView
+        contentContainerStyle={{
+          width: "100%",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Logo source={require("../assets/airbnb_logo.png")} />
 
-      <TextInput
-        placeholder="ID"
-        autoCapitalize={"none"}
-        value={userInput.username}
-        onChangeText={text => handleInput("username", text)}
-      />
-      <TextInput
-        placeholder="Password"
-        secureTextEntry={true}
-        value={userInput.password}
-        onChangeText={text => handleInput("password", text)}
-      />
-      <TouchableOpacity onPress={handleSubmit}>
-        <Button>
-          <Text>Sign In</Text>
-        </Button>
-      </TouchableOpacity>
-      <StatusBar barStyle="dark-content" />
-    </ScrollView>
+        <TextInput
+          placeholder="ID"
+          autoCapitalize={"none"}
+          value={userInput.username}
+          onChangeText={text => handleInput("username", text)}
+        />
+        <TextInput
+          placeholder="Password"
+          secureTextEntry={true}
+          value={userInput.password}
+          onChangeText={text => handleInput("password", text)}
+        />
+        <TouchableOpacity onPress={handleSubmit}>
+          <Button>
+            <Text>Sign In</Text>
+          </Button>
+        </TouchableOpacity>
+        <StatusBar barStyle="dark-content" />
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 

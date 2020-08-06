@@ -3,15 +3,24 @@ import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import { connect } from "react-redux";
 import { login, logout } from "../redux/usersSlice";
 import Auth from "../navigation/Auth";
+import Main from "../navigation/Main";
 import { NavigationContainer } from "@react-navigation/native";
 
 const Gate = ({ isLoggedIn, login, logout }) => {
   return (
     <NavigationContainer>
       {isLoggedIn ? (
-        <TouchableOpacity onPress={() => logout()}>
-          <Text>Logout</Text>
-        </TouchableOpacity>
+        <View
+          style={{
+            width: "100%",
+            flex: 1,
+          }}
+        >
+          <Main />
+          <TouchableOpacity onPress={() => logout()}>
+            <Text>Logout</Text>
+          </TouchableOpacity>
+        </View>
       ) : (
         <Auth />
       )}

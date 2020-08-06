@@ -1,4 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import api from "../api";
+import callApi from "../api";
 
 const userSlice = createSlice({
   name: "user",
@@ -18,5 +21,18 @@ const userSlice = createSlice({
   },
 });
 
+// API + Dispatch
 export const { login, logout } = userSlice.actions;
+export const loginRequest = form => async dispatch => {
+  try {
+    const { data, status } = await callApi("post", "users/login/", form);
+    if (status === 200) {
+      dispatch(login({ token: data.token }));
+      return true;
+    }
+  } catch (e) {
+    alert("Login failed");
+  }
+};
+
 export default userSlice.reducer;
