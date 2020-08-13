@@ -23,13 +23,12 @@ const roomSlice = createSlice({
 const { setExploreRooms } = roomSlice.actions;
 
 // API
-export const getRooms = (page, token) => async dispatch => {
-  const { data, status } = await callApi(
-    "get",
-    `rooms/?page=${page}`,
-    null,
-    token
-  );
-  dispatch(setExploreRooms(data.results));
+export const getRooms = (page, token) => dispatch => {
+  callApi("get", `rooms/?page=${page}`, null, token)
+    .then(res => {
+      const { data } = res;
+      dispatch(setExploreRooms(data.results));
+    })
+    .catch(e => console.log(e));
 };
 export default roomSlice.reducer;

@@ -36,6 +36,7 @@ export default function App() {
       require("./assets/loginBg.jpg"),
       require("./assets/night_of_hongkong.jpg"),
       require("./assets/airbnb_logo.png"),
+      require("./assets/blank.png"),
     ];
     const fonts = [Ionicons.font];
     return Promise.all(...cacheImages(images), ...cacheFonts(fonts));
