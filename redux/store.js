@@ -15,6 +15,7 @@ import { AsyncStorage } from "react-native";
 const persistConfig = {
   key: "root",
   storage: AsyncStorage,
+  // blacklist: ["room"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

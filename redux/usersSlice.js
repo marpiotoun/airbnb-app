@@ -8,11 +8,13 @@ const userSlice = createSlice({
   initialState: {
     isLoggedIn: false,
     token: null,
+    userId: null,
   },
   reducers: {
     login: (state, { payload }) => {
       state.isLoggedIn = true;
       state.token = payload.token;
+      state.userId = payload.id;
     },
     logout: state => {
       state.isLoggedIn = false;
@@ -27,7 +29,7 @@ export const loginRequest = form => async dispatch => {
   try {
     const { data, status } = await callApi("post", "users/login/", form);
     if (status === 200) {
-      dispatch(login({ token: data.token }));
+      dispatch(login({ token: data.token, id: data.id }));
       return true;
     }
   } catch (e) {

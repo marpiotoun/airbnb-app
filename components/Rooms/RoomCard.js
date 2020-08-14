@@ -1,8 +1,12 @@
 import React from "react";
 import { Text, Dimensions } from "react-native";
+import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
-import Swiper from "react-native-swiper";
+import Swiper from "react-native-web-swiper";
 import Pt from "prop-types";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { Ionicons } from "@expo/vector-icons";
+import { toggleFavApi } from "../../redux/roomsSlice";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -53,9 +57,40 @@ const Photo = styled.Image`
   height: 100%;
 `;
 
+const MarkContainer = styled.View`
+  position: absolute;
+  z-index: 5;
+  padding: 0;
+  margin: 0;
+  top: -3px;
+  right: 0;
+`;
+
+const Mark = ({ id, is_fav }) => {
+  const dispatch = useDispatch();
+  const handlePress = () => {
+    dispatch(toggleFavApi(id, is_fav));
+  };
+  return (
+    <MarkContainer>
+      <TouchableOpacity onPress={handlePress}>
+        <Ionicons
+          name="ios-bookmark"
+          size={30}
+          style={{
+            borderColor: "black",
+            color: is_fav ? "#f71656" : "#614c4d",
+          }}
+        />
+      </TouchableOpacity>
+    </MarkContainer>
+  );
+};
+
 const RoomCard = ({ id, is_fav, isSuperHost, photos, name, price }) => {
   return (
     <Container>
+      <Mark id={id} is_fav={is_fav} />
       <PhotosContainer>
         {photos?.length === 0 ? (
           <Photo
@@ -69,7 +104,10 @@ const RoomCard = ({ id, is_fav, isSuperHost, photos, name, price }) => {
             activeDotColor={"white"}
           >
             {photos.map(photo => (
-              <Photo key={photo.id} source={{ uri: photo.file }} />
+              <Photo
+                key={`roomCardPhoto${photo.id}`}
+                source={{ uri: photo.file }}
+              />
             ))}
           </Swiper>
         )}
@@ -101,4 +139,4 @@ RoomCard.propTypes = {
   price: Pt.number.isRequired,
 };
 
-export default RoomCard;
+export default React.memo(RoomCard);

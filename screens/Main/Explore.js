@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { getRooms } from "../../redux/roomsSlice";
+import { setPage, getRooms } from "../../redux/roomsSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView, ActivityIndicator, Dimensions } from "react-native";
 import RoomCard from "../../components/Rooms/RoomCard";
@@ -39,12 +39,22 @@ const Explore = () => {
   const rooms = useSelector(state => state.room.explore.rooms);
   const explore = useSelector(state => state.room.explore);
 
+  const loadMore = () => {
+    dispatch(setPage(explore.page + 1));
+    return 0;
+  };
+
+  useEffect(() => {
+    dispatch(setPage(1));
+  }, []);
+
   useEffect(() => {
     async function a() {
       await dispatch(getRooms(explore.page, token));
     }
     a();
-  }, []);
+  }, [explore.page]);
+
   return (
     <Container>
       <SearchBar>
@@ -59,7 +69,7 @@ const Explore = () => {
         >
           {rooms.map(room => (
             <RoomCard
-              key={room.id}
+              key={`room${room.id}${Math.round(Math.random() * 10e10)}`}
               id={room.id}
               is_fav={room.is_fav}
               isSuperHost={room.user.superhost}
@@ -68,8 +78,24 @@ const Explore = () => {
               price={room.price}
             />
           ))}
-          <TouchableOpacity>
-            <Text>Load more rooms</Text>
+          <TouchableOpacity
+            onPress={loadMore}
+            style={{
+              width: "100%",
+              alignItems: "center",
+              paddingBottom: 10,
+              backgroundColor: "#006a70",
+            }}
+          >
+            <Text
+              style={{
+                paddingTop: 10,
+                color: "white",
+                alignItems: "center",
+              }}
+            >
+              Load More
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       )}
