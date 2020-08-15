@@ -30,17 +30,12 @@ const roomSlice = createSlice({
     toggleFav: (state, action) => {
       const { roomId, is_fav } = action.payload;
       const room = state.explore.rooms.find(room => room.id === roomId);
+      room.is_fav = is_fav;
       if (is_fav) {
-        state.favs.push(room);
+        state.favs = [room, ...state.favs];
       } else {
         state.favs = state.favs.filter(room => room.id !== roomId);
       }
-      state.explore.rooms = state.explore.rooms.map(room => {
-        if (room.id === roomId) {
-          room.is_fav = is_fav;
-        }
-        return room;
-      });
     },
   },
 });
@@ -76,7 +71,7 @@ export const loadFavs = () => async (dispatch, getState) => {
   });
 };
 
-export const toggleFavApi = (roomId, is_fav) => async (dispatch, getState) => {
+export const toggleFavApi = (roomId, is_fav) => (dispatch, getState) => {
   const { userId, token } = getState().user;
   dispatch(toggleFav({ roomId, is_fav: !is_fav }));
   toggleFavRequest(userId, roomId, token).catch(e => {

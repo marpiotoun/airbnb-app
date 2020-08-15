@@ -1,19 +1,21 @@
 import React from "react";
-import { Text, Dimensions } from "react-native";
 import { useDispatch } from "react-redux";
 import styled from "styled-components/native";
-import Swiper from "react-native-web-swiper";
 import Pt from "prop-types";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import Photos from "./RoomPhotos";
 import { toggleFavApi } from "../../redux/roomsSlice";
-
-const { width, height } = Dimensions.get("screen");
 
 const Container = styled.View`
   width: 100%;
   margin-bottom: 50px;
   align-items: flex-start;
+`;
+
+const StyledTouchableOpacity = styled.TouchableOpacity`
+  width: 100%;
 `;
 
 const Name = styled.Text`
@@ -26,6 +28,7 @@ const PriceView = styled.View`
 `;
 
 const PriceNumber = styled.Text`
+  font-size: 16px;
   font-weight: 600;
 `;
 
@@ -44,17 +47,6 @@ const SuperhostText = styled.Text`
   text-transform: uppercase;
   font-weight: 500;
   font-size: 10px;
-`;
-
-const PhotosContainer = styled.View`
-  height: ${height / 4}px;
-  margin-bottom: 10px;
-  width: 100%;
-`;
-
-const Photo = styled.Image`
-  width: 100%;
-  height: 100%;
 `;
 
 const MarkContainer = styled.View`
@@ -86,42 +78,33 @@ const Mark = ({ id, is_fav }) => {
     </MarkContainer>
   );
 };
-
+const NavigationContainer = ({ id, children }) => {
+  const navigation = useNavigation();
+  return (
+    <StyledTouchableOpacity
+      onPress={() => navigation.navigate("RoomDetail", { id })}
+    >
+      {children}
+    </StyledTouchableOpacity>
+  );
+};
 const RoomCard = ({ id, is_fav, isSuperHost, photos, name, price }) => {
   return (
     <Container>
       <Mark id={id} is_fav={is_fav} />
-      <PhotosContainer>
-        {photos?.length === 0 ? (
-          <Photo
-            source={require("../../assets/blank.png")}
-            resizeMode="cover"
-          />
-        ) : (
-          <Swiper
-            paginationStyle={{ marginBottom: -10 }}
-            dotColor={"grey"}
-            activeDotColor={"white"}
-          >
-            {photos.map(photo => (
-              <Photo
-                key={`roomCardPhoto${photo.id}`}
-                source={{ uri: photo.file }}
-              />
-            ))}
-          </Swiper>
-        )}
-      </PhotosContainer>
+      <Photos photos={photos} />
       {isSuperHost ? (
         <Superhost>
           <SuperhostText>Superhost</SuperhostText>
         </Superhost>
       ) : null}
-      <Name>{name}</Name>
-      <PriceView>
-        <PriceNumber> {price}</PriceNumber>
-        <PriceText> per Night</PriceText>
-      </PriceView>
+      <NavigationContainer id={id}>
+        <Name>{name}</Name>
+        <PriceView>
+          <PriceNumber>${price}</PriceNumber>
+          <PriceText> / Day</PriceText>
+        </PriceView>
+      </NavigationContainer>
     </Container>
   );
 };

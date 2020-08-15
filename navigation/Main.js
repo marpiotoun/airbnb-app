@@ -1,14 +1,17 @@
 import React from "react";
 import { Platform } from "react-native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { color } from "../uiToolkit";
+import { Ionicons } from "@expo/vector-icons";
 import Explore from "../screens/Main/Explore";
 import MapScreen from "../screens/Main/MapScreen";
 import Profile from "../screens/Main/Profile";
 import Saved from "../screens/Main/Saved";
-import { color } from "../uiToolkit";
-import { Ionicons } from "@expo/vector-icons";
-
+import Room from "../screens/Main/Room";
+import BackBtn from "../components/Auth/BackBtn";
 const Tab = createBottomTabNavigator();
+const Main = createStackNavigator();
 
 const BottomTabs = () => {
   return (
@@ -45,4 +48,25 @@ const BottomTabs = () => {
   );
 };
 
-export default BottomTabs;
+export default () => {
+  return (
+    <Main.Navigator mode="modal">
+      <Main.Screen
+        name="List"
+        component={BottomTabs}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Main.Screen
+        name="RoomDetail"
+        component={Room}
+        options={{
+          title: "Room detail",
+          headerBackTitleVisible: false,
+          headerBackImage: () => <BackBtn />,
+        }}
+      />
+    </Main.Navigator>
+  );
+};
