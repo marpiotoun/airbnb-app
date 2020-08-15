@@ -38,9 +38,9 @@ const BottomTabs = () => {
       })}
     >
       <Tab.Screen name="Explore" component={Explore} />
+      <Tab.Screen name="Saved" component={Saved} />
       <Tab.Screen name="MapScreen" component={MapScreen} />
       <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Saved" component={Saved} />
     </Tab.Navigator>
   );
 };

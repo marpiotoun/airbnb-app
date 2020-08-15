@@ -11,11 +11,20 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
 `;
+
+const Title = styled.Text`
+  width: 100%;
+  font-weight: 500;
+  font-size: 30px;
+  padding: 20% 0 40px 15px;
+`;
+
 const NoneText = styled.Text`
   margin: auto auto;
   font-size: 20px;
   color: gray;
 `;
+
 const Saved = ({ favs, loadFavs }) => {
   useEffect(() => {
     loadFavs();
@@ -23,11 +32,12 @@ const Saved = ({ favs, loadFavs }) => {
 
   return (
     <Container>
+      <Title>Favorite Rooms</Title>
       {favs.length === 0 ? (
         <NoneText>Room does not exists.</NoneText>
       ) : (
         <ScrollView
-          style={{ width: "100%", marginTop: 100 }}
+          style={{ width: "100%" }}
           contentContainerStyle={{ paddingHorizontal: 15 }}
         >
           {favs.map(room => (
